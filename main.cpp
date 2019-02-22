@@ -115,8 +115,13 @@ int main(int argc, char *argv[]) {
     }
 
     if (remoteCall) {
-        callRemoteMethod(dbusName, dbusPath, dbusInterface, *remoteCall);
-        return 1;
+        try {
+            callRemoteMethod(dbusName, dbusPath, dbusInterface, *remoteCall);
+        } catch (const sdbus::Error& e) {
+            std::cerr << "Cannot call method - is 'simplelocker -l ...' running?" << "\n" << e.what() << std::endl;
+        }
+
+        return 0;
     }
 
 
@@ -147,11 +152,16 @@ int main(int argc, char *argv[]) {
         });
     }
     if (serveOnDbus) {
-        service = DbusService(dbusName.c_str(), dbusPath.c_str(), dbusInterface.c_str());
-        service->onMethod(onDbus.c_str(), start);
-        service->onMethod(onDbusDisable.c_str(), [&] { idleIsEnabled = false; });
-        service->onMethod(onDbusEnable.c_str(), [&] { idleIsEnabled = true; });
-        service->finalize();
+        try {
+            service = DbusService(dbusName.c_str(), dbusPath.c_str(), dbusInterface.c_str());
+            service->onMethod(onDbus.c_str(), start);
+            service->onMethod(onDbusDisable.c_str(), [&] { idleIsEnabled = false; });
+            service->onMethod(onDbusEnable.c_str(), [&] { idleIsEnabled = true; });
+            service->finalize();
+        } catch (const sdbus::Error& e) {
+            std::cerr << "Cannot bind service - another instance already running?" << "\n" << e.what() << std::endl;
+            return 1;
+        }
     }
 
     while (true) {
