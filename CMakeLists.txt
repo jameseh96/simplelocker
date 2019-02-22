@@ -8,7 +8,7 @@ add_subdirectory(boost-cmake)
 
 FUNCTION(add_sdbus_subdir)
     set(ENABLE_TESTS OFF CACHE BOOL "Disable sdbus-cpp tests")
-    add_subdirectory(sdbus-cpp/src sdbus-cpp/build)
+    add_subdirectory(sdbus-cpp/sdbus-cpp sdbus-cpp/build)
 ENDFUNCTION ()
 
 add_sdbus_subdir()
@@ -17,7 +17,7 @@ get_filename_component(CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" ABSOLUTE B
 
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib64")
 
-include_directories(${CMAKE_SOURCE_DIR}/sdbus-cpp/src/include)
+include_directories(${CMAKE_SOURCE_DIR}/sdbus-cpp/sdbus-cpp/include)
 
 add_executable(simplelocker main.cpp Inhibitor.h DbusSignalListener.h DbusService.h XIdleChecker.h XIdleChecker.cpp)
 add_dependencies(simplelocker sdbus-c++)

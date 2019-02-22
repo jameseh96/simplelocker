@@ -1,6 +1,6 @@
 [submodule "boost-cmake"]
 	path = boost-cmake
 	url = https://github.com/Orphis/boost-cmake.git
-[submodule "sdbus-cpp/src"]
-	path = sdbus-cpp/src
+[submodule "sdbus-cpp/sdbus-cpp"]
+	path = sdbus-cpp/sdbus-cpp
 	url = https://github.com/jameseh96/sdbus-cpp.git
