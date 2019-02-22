@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
 
     po::options_description remoteDesc("Remote call options");
     remoteDesc.add_options()
-            ("remote,r", po::value(&remoteCall), "Call dbus method (i.e., ");
+            ("remote,r", po::value(&remoteCall), "Call dbus method (i.e., `-r Lock` to lock a running instance)");
 
 
     allDesc.add_options()
