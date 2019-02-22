@@ -75,7 +75,7 @@ TBC
 Simplelocker isn't packaged for any distros (yet), but it is straightforward to build.
 
 ```
-git clone https://github.com/jameseh96/simplelocker.git simplelocker
+git clone --recurse-submodules https://github.com/jameseh96/simplelocker.git simplelocker
 cd ./simplelocker
 mkdir ./build
 cd !$
