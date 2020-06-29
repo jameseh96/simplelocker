@@ -13,10 +13,11 @@ public:
         dbusObject = sdbus::createObject(*connection, objectPath);
     }
 
-    template<class Func>
-    void onMethod(const char* methodName, Func&& func) {
+    using Callback = std::function<void()>;
+
+    void onMethod(const char* methodName, const Callback& func) {
         auto& callbacks = methodCallbacks[methodName];
-        callbacks.push_back(std::forward<Func>(func));
+        callbacks.push_back(func);
 
         if (callbacks.size() == 1) {
             dbusObject->registerMethod(methodName).onInterface(interfaceName).implementedAs([&](){
@@ -41,7 +42,7 @@ private:
 
     const char* interfaceName;
 
-    std::map<const char*, std::vector<std::function<void()>>> methodCallbacks;
+    std::map<const char*, std::vector<Callback>> methodCallbacks;
 
     std::unique_ptr<sdbus::IConnection> connection;
     std::unique_ptr<sdbus::IObject> dbusObject;
