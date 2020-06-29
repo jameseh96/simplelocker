@@ -8,7 +8,8 @@
 
 class DbusService {
 public:
-    DbusService(const char* serviceName, const char* objectPath, const char* interfaceName) : interfaceName(interfaceName) {
+    DbusService(const std::string& serviceName, const std::string& objectPath, const std::string& interfaceName)
+            : interfaceName(interfaceName) {
         connection = sdbus::createSessionBusConnection(serviceName);
         dbusObject = sdbus::createObject(*connection, objectPath);
     }
@@ -37,14 +38,13 @@ public:
 
 private:
 
-
     void dispatch(std::vector<std::function<void()>>& callbacks) {
         for (auto& cb : callbacks) {
             cb();
         }
     }
 
-    const char* interfaceName;
+    std::string interfaceName;
 
     std::map<std::string, std::vector<Callback>> methodCallbacks;
 
