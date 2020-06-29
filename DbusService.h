@@ -26,7 +26,7 @@ public:
         if (callbacks.size() == 1) {
             dbusObject->registerMethod(methodName)
                        .onInterface(interfaceName)
-                       .implementedAs([&](){
+                       .implementedAs([&callbacks](){
                            dispatch(callbacks);
                        });
         }
@@ -39,7 +39,7 @@ public:
 
 private:
 
-    void dispatch(std::vector<std::function<void()>>& callbacks) {
+    static void dispatch(std::vector<std::function<void()>>& callbacks) {
         for (auto& cb : callbacks) {
             cb();
         }
