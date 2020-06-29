@@ -4,6 +4,7 @@
 
 #include <memory>
 #include <vector>
+#include <unordered_map>
 
 
 class DbusService {
@@ -46,7 +47,7 @@ private:
 
     std::string interfaceName;
 
-    std::map<std::string, std::vector<Callback>> methodCallbacks;
+    std::unordered_map<std::string, std::vector<Callback>> methodCallbacks;
 
     std::unique_ptr<sdbus::IConnection> connection;
     std::unique_ptr<sdbus::IObject> dbusObject;
