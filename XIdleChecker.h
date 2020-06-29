@@ -14,9 +14,10 @@ class XIdleChecker {
 public:
     XIdleChecker();
 
-    template<class Func>
-    void onIdle(std::chrono::milliseconds idleTime, Func&& func) {
-        idleCallbacks.emplace_back(idleTime, std::forward<Func>(func));
+    using Callback = std::function<void()>;
+
+    void onIdle(std::chrono::milliseconds idleTime, const Callback& func) {
+        idleCallbacks.emplace_back(idleTime, func);
     }
 
     void checkIdleTime();
@@ -26,7 +27,7 @@ private:
     Display* display;
 
     std::chrono::milliseconds lastIdleTime = 0ms;
-    std::vector<std::pair<std::chrono::milliseconds, std::function<void()>>> idleCallbacks;
+    std::vector<std::pair<std::chrono::milliseconds, Callback>> idleCallbacks;
 
 };
 
