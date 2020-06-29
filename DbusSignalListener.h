@@ -12,7 +12,7 @@ class DbusSignalListener {
 public:
     DbusSignalListener() : proxy(
             sdbus::createObjectProxy("org.freedesktop.login1", "/org/freedesktop/login1")),
-                                     inhibitor(proxy, "sleep:shutdown", "event-runner", "", "delay") {
+                                     inhibitor(proxy, "sleep:shutdown", "simplelocker", "", "delay") {
 
         const char* interface = "org.freedesktop.login1.Manager";
         proxy->uponSignal("PrepareForSleep")
