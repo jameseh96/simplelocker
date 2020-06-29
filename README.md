@@ -8,7 +8,7 @@ Simplelocker can be launched as:
 
 `simplelocker -i <x> -c <cmd>`
 
-To run <cmd> after the session has been idle for <x> seconds.  
+To run <cmd> after the session has been idle for \<x> seconds.
 
 For a more complicated example,
 
