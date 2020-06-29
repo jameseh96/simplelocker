@@ -24,24 +24,21 @@ public:
                 .call([this](bool before) { onShutdownCallback(before); });
         proxy->finishRegistration();
     }
-
-    template<class Func>
-    void onSleep(Func&& func) { addCallback(std::forward<Func>(func), sleepCallbacks); }
-
-    template<class Func>
-    void onWake(Func&& func) { addCallback(std::forward<Func>(func), wakeCallbacks); }
-
-    template<class Func>
-    void onShutdown(Func&& func) { addCallback(std::forward<Func>(func), shutdownCallbacks); }
+    
+    using Callback = std::function<void()>;
+    
+    void onSleep(const Callback& callback) { addCallback(callback, sleepCallbacks); }
+    
+    void onWake(const Callback& callback) { addCallback(callback, wakeCallbacks); }
+    
+    void onShutdown(const Callback& callback) { addCallback(callback, shutdownCallbacks); }
 
     // does this actually happen?
-    template<class Func>
-    void afterShutdown(Func&& func) { addCallback(std::forward<Func>(func), afterShutdownCallbacks); }
+    void afterShutdown(const Callback& callback) { addCallback(callback, afterShutdownCallbacks); }
 
 private:
-    template<class Func>
-    void addCallback(Func&& func, std::vector<std::function<void()>>& callbacks) {
-        callbacks.push_back(std::forward<Func>(func));
+    static void addCallback(const Callback& callback, std::vector<Callback>& callbacks) {
+        callbacks.push_back(callback);
     }
 
     void onSleepCallback(bool before) {
@@ -63,7 +60,7 @@ private:
         }
 
     };
-    void dispatch(std::vector<std::function<void()>>& callbacks) {
+    static void dispatch(std::vector<std::function<void()>>& callbacks) {
         for (auto& cb : callbacks) {
             cb();
         }
@@ -71,10 +68,10 @@ private:
 
     std::unique_ptr<sdbus::IObjectProxy> proxy;
 
-    std::vector<std::function<void()>> sleepCallbacks;
-    std::vector<std::function<void()>> wakeCallbacks;
-    std::vector<std::function<void()>> shutdownCallbacks;
-    std::vector<std::function<void()>> afterShutdownCallbacks;
+    std::vector<Callback> sleepCallbacks;
+    std::vector<Callback> wakeCallbacks;
+    std::vector<Callback> shutdownCallbacks;
+    std::vector<Callback> afterShutdownCallbacks;
 
     Inhibitor inhibitor;
 };
