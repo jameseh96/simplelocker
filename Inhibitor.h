@@ -8,8 +8,9 @@
 
 class Inhibitor {
 public:
-    Inhibitor(std::unique_ptr<sdbus::IObjectProxy>& proxy, const char* what, const char* who, const char* why,
-              const char* type) : what(what), who(who), why(why), type(type), fd(-1), proxy(proxy) {
+    Inhibitor(std::unique_ptr<sdbus::IObjectProxy>& proxy, std::string what, std::string who, std::string why,
+              std::string type) : what(std::move(what)), who(std::move(who)), why(std::move(why)),
+                                  type(std::move(type)), fd(-1), proxy(proxy) {
         acquire();
     }
 
@@ -26,6 +27,7 @@ public:
         }
 
     }
+
     void release() {
         if (fd != -1) {
             int r = close(fd);
@@ -35,14 +37,16 @@ public:
             fd = -1;
         }
     }
+
     ~Inhibitor() {
         release();
     }
+
 private:
-    const char* what;
-    const char* who;
-    const char* why;
-    const char* type;
+    std::string what;
+    std::string who;
+    std::string why;
+    std::string type;
     int fd;
     std::unique_ptr<sdbus::IObjectProxy>& proxy;
 };
