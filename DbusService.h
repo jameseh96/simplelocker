@@ -15,14 +15,18 @@ public:
 
     using Callback = std::function<void()>;
 
-    void onMethod(const char* methodName, const Callback& func) {
+    void onMethod(const std::string& methodName, const Callback& func) {
         auto& callbacks = methodCallbacks[methodName];
         callbacks.push_back(func);
 
+        // if this is the first time a callback has been added for this method,
+        // register with dbus
         if (callbacks.size() == 1) {
-            dbusObject->registerMethod(methodName).onInterface(interfaceName).implementedAs([&](){
-                dispatch(callbacks);
-            });
+            dbusObject->registerMethod(methodName)
+                       .onInterface(interfaceName)
+                       .implementedAs([&](){
+                           dispatch(callbacks);
+                       });
         }
     }
 
@@ -42,7 +46,7 @@ private:
 
     const char* interfaceName;
 
-    std::map<const char*, std::vector<Callback>> methodCallbacks;
+    std::map<std::string, std::vector<Callback>> methodCallbacks;
 
     std::unique_ptr<sdbus::IConnection> connection;
     std::unique_ptr<sdbus::IObject> dbusObject;
